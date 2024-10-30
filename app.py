@@ -4,7 +4,7 @@ from docx2pdf import convert as docx2pdf_convert
 import os
 from docx import Document
 from docx2pdf import convert
-import uuid # This will be needed to generate unique directory names upon user request
+import uuid  # This will be needed to generate unique directory names upon user request
 
 app = Flask(__name__)
 
@@ -36,9 +36,6 @@ def word2pdf():
 @app.route('/pdf2word.html')
 def pdf2word():
     return render_template('pdf2word.html')
-
-# Start here
-
 
 
 # Route to handle Word to PDF conversion
@@ -87,12 +84,6 @@ def convert_docx_to_pdf():
             return "An error occurred during conversion."
 
 
-
-
-
-
-
-
 # Function to handle PDF to Word conversion
 @app.route('/convertpdf2word', methods=['POST'])
 def convert_pdf_to_docx():
@@ -121,7 +112,6 @@ def convert_pdf_to_docx():
         return jsonify({'error': str(e)}), 500
     
     return send_file(word_file_path, as_attachment=True)
-
 
 
 if __name__ == '__main__':
