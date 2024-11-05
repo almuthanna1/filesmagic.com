@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Update History</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            padding-top: 60px; /* Adjusts based on the height of the top nav */
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        .history-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .update-entry {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .update-entry:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .update-date {
+            font-weight: 500;
+            color: #04AA6D;
+            font-size: 1.2rem;
+        }
+
+        .update-description {
+            margin-top: 5px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .topnav {
+        background-color: #222;
+        overflow: hidden;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        left: 0;
+        z-index: 999;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 0 20px;
+        box-sizing: border-box;
+    }
+
+    /* Active state: clickable, green background */
+    .topnav a.active {
+        display: inline-block;
+        color: white;
+        padding: 10px 20px;
+        background-color: #04AA6D;
+        text-decoration: none;
+        font-size: 17px;
+        border-radius: 5px;
+        margin: 0 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Hover effect for active links */
+    .topnav a.active:hover {
+        background-color: #028A58;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Disabled state: gray and non-clickable */
+    .topnav a.disabled {
+        display: inline-block;
+        color: #888;
+        background-color: #222;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+        border-radius: 5px;
+        margin: 0 5px;
+        pointer-events: none; /* Disables clicking */
+        cursor: default; /* Changes cursor to indicate it's not clickable */
+    }
+
+        footer {
+            text-align: center;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #f2f2f2;
+            width: 100%;
+            bottom: 0;
+            margin-top: auto; /* Pushes the footer right at the bottom */
+            box-sizing: border-box;
+        }
+    </style>
+    <link rel="icon" href="/static/images/filesmagic_favicon.png" type="image/png">
+</head>
+<body>
+    <div class="topnav">
+        <a class="active tool-btn" href="changelog.html">Changelog</a>
+        <a class="active tool-btn" href="index.html">Home</a>
+        <a class="active tool-btn" href="word2pdf.html">Word to PDF</a>
+        <a class="active tool-btn" href="pdf2word.html">PDF to Word</a>
+        <a class="disabled" href="imageformat.html">Image Format</a>
+        <a class="disabled" href="excel2pdf.html">Excel to PDF</a>
+        <a class="disabled" href="yt2mp4.html">YouTube to MP4 (releasing soon)</a>
+    </div>
+
+    <h1>FilesMagic Update History</h1>
+
+    <div class="history-container">
+
+        <div class="update-entry">
+            <p class="update-date">Version 3.1 - October 21, 2024</p>
+            <p class="update-description">-Fixed Word to PDF 1-1 conversion<br> - Fixed PDF to Word 1-1 conversion<br> - Minor UI changes</p>
+        </div>
+
+        <div class="update-entry">
+            <p class="update-date">Version 3.0 – October 14, 2024</p>
+            <p class="update-description">- Major Homepage Redesign<br> - Bug Fixes and Improvements</p>
+        </div>
+
+        <div class="update-entry">
+            <p class="update-date">Version 2.1 – October 1, 2024</p>
+            <p class="update-description">- Improved Website Speed<br> - Minor UI Changes</p>
+        </div>
+
+        <div class="update-entry">
+            <p class="update-date">Version 2.0 - September 18, 2024</p>
+            <p class="update-description">- Major UI Changes<br>- Added 'PDF to Word' support<br>- Improved Website Speed</p>
+        </div>
+
+        <div class="update-entry">
+            <p class="update-date">Version 1.0.1 – September 14, 2024</p>
+            <p class="update-description">- Improved speed for 'Word to PDF' conversions</p>
+        </div>
+
+        <div class="update-entry">
+            <p class="update-date">Version 1.0 – September 1, 2024</p>
+            <p class="update-description">- Initial FilesMagic Launch<br> - Added 'Word to PDF' support</p>
+        </div>
+
+        <!-- Add more updates below in the same structure -->
+
+    </div>
+    
+    <br>
+    <br>
+
+    <footer>
+        <small>&copy; FilesMagic 2024. All Rights Reserved.</small>
+    </footer>
+
+</body>
+</html>
