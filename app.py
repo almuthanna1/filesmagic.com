@@ -4,7 +4,8 @@ from docx2pdf import convert as docx2pdf_convert
 import os
 from docx import Document
 from docx2pdf import convert
-import uuid  # This will be needed to generate unique directory names upon user request
+import aspose.words as aw
+import uuid
 
 app = Flask(__name__)
 
@@ -49,7 +50,7 @@ def convert_docx_to_pdf():
         return "No selected file"
     
     if file:
-        # Unique directory
+        # Create unique directory for storing files
         unique_dir = os.path.join(UPLOAD_FOLDER, str(uuid.uuid4()))
         os.makedirs(unique_dir, exist_ok=True)
 
@@ -60,11 +61,14 @@ def convert_docx_to_pdf():
         output_file_name = f"{os.path.splitext(file.filename)[0]}.pdf"
         output_file_path = os.path.join(unique_dir, output_file_name)
         
-        # Convert DOCX to PDF
+        # Convert DOCX to PDF using Aspose.Words
         try:
-            convert(input_file_path, output_file_path)
+            # Load the DOCX file with Aspose
+            doc = aw.Document(input_file_path)
+            # Save as PDF
+            doc.save(output_file_path, aw.SaveFormat.PDF)
             
-            # Check if file exists
+            # Check if the output PDF exists
             if not os.path.exists(output_file_path):
                 return "PDF conversion failed: file not created."
 
@@ -115,5 +119,4 @@ def convert_pdf_to_docx():
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(debug=True)
