@@ -4,8 +4,8 @@ from docx2pdf import convert as docx2pdf_convert
 import os
 from docx import Document
 from docx2pdf import convert
-import aspose.words as aw
 import uuid
+import pdfkit
 
 app = Flask(__name__)
 
@@ -15,6 +15,8 @@ UPLOAD_FOLDER = './uploads'
 # Create the uploads directory if it doesn't exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+pdfkit_config = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
 
 
 # Routes for rendering the templates (unchanged)
@@ -39,6 +41,15 @@ def pdf2word():
     return render_template('pdf2word.html')
 
 
+# Function to convert DOCX to HTML
+def docx_to_html(input_path):
+    doc = Document(input_path)
+    html_content = "<html><body>"
+    for paragraph in doc.paragraphs:
+        html_content += f"<p>{paragraph.text}</p>"
+    html_content += "</body></html>"
+    return html_content
+
 # Route to handle Word to PDF conversion
 @app.route('/convertw2pdf', methods=['POST'])
 def convert_docx_to_pdf():
@@ -61,13 +72,12 @@ def convert_docx_to_pdf():
         output_file_name = f"{os.path.splitext(file.filename)[0]}.pdf"
         output_file_path = os.path.join(unique_dir, output_file_name)
         
-        # Convert DOCX to PDF using Aspose.Words
+        # Convert DOCX to HTML and then to PDF using pdfkit
         try:
-            # Load the DOCX file with Aspose
-            doc = aw.Document(input_file_path)
-            # Save as PDF
-            doc.save(output_file_path, aw.SaveFormat.PDF)
-            
+            html_content = docx_to_html(input_file_path)
+            options = {'encoding': 'UTF-8', 'quiet': ''}
+            pdfkit.from_string(html_content, output_file_path, configuration=pdfkit_config, options=options)
+
             # Check if the output PDF exists
             if not os.path.exists(output_file_path):
                 return "PDF conversion failed: file not created."
