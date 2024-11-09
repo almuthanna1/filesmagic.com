@@ -4,3 +4,4 @@ docx2pdf
 python-docx
 pdfkit
 gunicorn
+weasyprint
