@@ -1,11 +1,9 @@
 from flask import Flask, render_template, request, send_file, jsonify, after_this_request
 from pdf2docx import Converter
-from docx2pdf import convert as docx2pdf_convert
 import os
 from docx import Document
-from docx2pdf import convert
 import uuid
-import pdfkit
+from weasyprint import HTML
 
 app = Flask(__name__)
 
@@ -15,9 +13,6 @@ UPLOAD_FOLDER = './uploads'
 # Create the uploads directory if it doesn't exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-pdfkit_config = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
-
 
 # Routes for rendering the templates (unchanged)
 @app.route('/changelog.html')
@@ -39,7 +34,6 @@ def word2pdf():
 @app.route('/pdf2word.html')
 def pdf2word():
     return render_template('pdf2word.html')
-
 
 # Function to convert DOCX to HTML
 def docx_to_html(input_path):
@@ -72,11 +66,10 @@ def convert_docx_to_pdf():
         output_file_name = f"{os.path.splitext(file.filename)[0]}.pdf"
         output_file_path = os.path.join(unique_dir, output_file_name)
         
-        # Convert DOCX to HTML and then to PDF using pdfkit
+        # Convert DOCX to HTML and then to PDF using WeasyPrint
         try:
             html_content = docx_to_html(input_file_path)
-            options = {'encoding': 'UTF-8', 'quiet': ''}
-            pdfkit.from_string(html_content, output_file_path, configuration=pdfkit_config, options=options)
+            HTML(string=html_content).write_pdf(output_file_path)
 
             # Check if the output PDF exists
             if not os.path.exists(output_file_path):
@@ -96,7 +89,6 @@ def convert_docx_to_pdf():
         except Exception as e:
             print(f"Conversion error: {e}")  # Log specific errors for debugging
             return "An error occurred during conversion."
-
 
 # Function to handle PDF to Word conversion
 @app.route('/convertpdf2word', methods=['POST'])
@@ -126,7 +118,6 @@ def convert_pdf_to_docx():
         return jsonify({'error': str(e)}), 500
     
     return send_file(word_file_path, as_attachment=True)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
