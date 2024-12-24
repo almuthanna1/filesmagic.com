@@ -1,0 +1,12 @@
+Flask
+pdf2docx
+docx2pdf
+python-docx
+gunicorn
+weasyprint
+reportlab
+pandas
+matplotlib
+PyPDF2
+Pillow
+werkzeug
