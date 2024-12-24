@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Converter</title>
+    <link rel="stylesheet" href="/static/navigation.css">
+    <link rel="stylesheet" href="/static/footer.css">
+    <link rel="icon" href="/static/filesmagic_favicon.png" type="image/png">
+    <style>
+        html, body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #444;
+            font-size: 24px;
+        }
+
+        .file-input {
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        label {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .convert-btn {
+            background-color: #04AA6D;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .convert-btn:hover {
+            background-color: #0056b3;
+        }
+
+        #status {
+            margin-top: 20px;
+            font-size: 14px;
+            color: darkblue;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="topnav">
+        <a class="active" href="changelog.html">Changelog</a>
+        <a class="active" href="index.html">Home</a>
+        <a class="active" href="word2pdf.html">Word to PDF</a>
+        <a class="active" href="pdf2word.html">PDF to Word</a>
+        <a class="active" href="excel2pdf.html">Excel to PDF</a>
+        <a class="active" href="imgcnvt.html">Image Converter</a>
+        <a class="disabled" href="#">‎</a>
+    </div>
+
+    <main>
+        <div class="container">
+            <h1>Image Converter</h1>
+            <form id="convertForm" enctype="multipart/form-data">
+                <label class="file-input">
+                    <input type="file" name="file" id="fileToUpload" accept="image/*">
+                </label>
+                <br>
+                <br>
+                <label for="format-select">Choose new image format:</label>
+                <select id="format-select" name="format">
+                    <option value="jpeg">JPEG</option>
+                    <option value="png">PNG</option>
+                    <option value="bmp">BMP</option>
+                    <option value="tiff">TIFF</option>
+                    <option value="webp">WEBP</option>
+                </select>
+                <br><br>
+                <button type="button" id="convert-btn" class="convert-btn">Convert Image</button>
+            </form>
+            <p id="status"></p>
+            <a id="download-link" href="#" style="display:none;" download="converted_image">Download Converted Image</a>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById("convert-btn").addEventListener("click", async function() {
+            const fileInput = document.getElementById("fileToUpload");
+            const status = document.getElementById("status");
+            const downloadLink = document.getElementById("download-link");
+
+            if (fileInput.files.length === 0) {
+                status.innerHTML = "Please upload an image file.";
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('format', document.getElementById("format-select").value);
+
+            status.innerHTML = "Converting...";
+
+            try {
+                const response = await fetch('/imgcnvt', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Conversion failed with status: ${response.status}`);
+                }
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+
+                // Retrieve the content-disposition header to extract the filename
+                const disposition = response.headers.get('Content-Disposition');
+                const filenameMatch = disposition && disposition.match(/filename="([^"]+)"/);
+                const filename = filenameMatch ? filenameMatch[1] : "converted_image";
+
+                // Update the download link and trigger the download
+                downloadLink.href = url;
+                downloadLink.download = filename; // Set the correct filename here
+                downloadLink.style.display = "block";
+                status.innerHTML = "Conversion successful! Download the file below.";
+            } catch (error) {
+                status.innerHTML = `Error: ${error.message}`;
+            }
+        });
+    </script>
+
+    <footer>
+        <small>&copy; FilesMagic 2024. All Rights Reserved.</small>
+    </footer>
+</body>
+</html>
