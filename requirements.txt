@@ -1,7 +1,0 @@
-Flask
-pdf2docx
-docx2pdf
-python-docx
-pdfkit
-gunicorn
-weasyprint
