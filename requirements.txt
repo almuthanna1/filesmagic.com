@@ -11,3 +11,4 @@ PyPDF2
 Pillow
 werkzeug
 openpyxl
+pypandoc
