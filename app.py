@@ -27,7 +27,7 @@ os.makedirs('./uploads', exist_ok=True)
 os.makedirs('./output', exist_ok=True)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['OUTPUT_FOLDER'] = OUTPUT_FOLDER 
+app.config['OUTPUT_FOLDER'] = OUTPUT_FOLDER
 
 # Configure allowed file extensions
 ALLOWED_EXTENTIONS = {'png', 'jpg', 'jpeg', 'bmp', 'tiff', 'webp'}
@@ -267,20 +267,24 @@ def convert_images():
         filename = secure_filename(file.filename)
         
         # Convert the file format
-        output_format = request.form['format']  # Output format chosen by the user
+        output_format = request.form['format'].lower()  # Output format chosen by the user
+        if output_format not in ALLOWED_EXTENTIONS:
+            return "Invalid format", 400
+
+        # Open the uploaded file
         img = Image.open(file)
         
         # If the image has an alpha channel (RGBA), convert it to RGB
         if img.mode == 'RGBA':
             img = img.convert('RGB')
+
+        # Create a new filename for the converted image
+        new_filename = os.path.splitext(filename)[0] + f'.{output_format}'
         
         # Prepare to save the converted image in memory
         img_byte_arr = io.BytesIO()
-        img.save(img_byte_arr, format=output_format)
+        img.save(img_byte_arr, format=output_format.upper())
         img_byte_arr.seek(0)
-        
-        # Set filename for the converted image
-        new_filename = f"{os.path.splitext(filename)[0]}.{output_format}"
         
         # Return the image file with proper filename
         return send_file(img_byte_arr, mimetype=f'image/{output_format}', as_attachment=True, download_name=new_filename)
