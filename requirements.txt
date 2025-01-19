@@ -12,3 +12,4 @@ Pillow
 werkzeug
 openpyxl
 pypandoc
+comtypes
