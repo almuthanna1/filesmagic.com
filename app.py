@@ -14,6 +14,8 @@ import tempfile
 from PIL import Image
 from werkzeug.utils import secure_filename
 import logging
+import subprocess
+import comtypes.client
 
 
 app = Flask(__name__)
@@ -72,67 +74,100 @@ def testing():
 @app.route('/convertw2pdf', methods=['POST'])
 def convert_docx_to_pdf():
     """
-    Converts a Word document (.docx) to a PDF file using python-docx and reportlab.
+    Converts a Word document (.docx) to a PDF using Microsoft Word via comtypes.client.
     """
-    logger.debug("Conversion started")  # Log when conversion is called
+    logging.debug("Conversion started")
 
     if 'file' not in request.files:
-        logger.error("No file part in the request")
         return jsonify({"error": "No file part in the request"}), 400
 
     file = request.files['file']
-    logger.debug(f"File received: {file.filename}")
 
     if file.filename == '':
-        logger.error("No file selected")
         return jsonify({"error": "No file selected"}), 400
 
     if not file.filename.lower().endswith('.docx'):
-        logger.error("Unsupported file format. Please upload a .docx file.")
         return jsonify({"error": "Unsupported file format. Please upload a .docx file."}), 400
+
+    tmp_file_path = None
+    output_pdf_path = None
 
     try:
         # Save the uploaded Word file temporarily
-        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-            tmp_file.write(file.read())
-            tmp_file.close()
-            logger.debug(f"Temporary file created: {tmp_file.name}")
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp_file:
+            tmp_file.write(file.stream.read())  # Stream to handle large files efficiently
+            tmp_file_path = tmp_file.name
 
-            # Open the DOCX file with python-docx
-            doc = Document(tmp_file.name)
-            logger.debug(f"Word document loaded, {len(doc.paragraphs)} paragraphs found.")
+        # Create a temporary path for the output PDF
+        output_pdf_path = os.path.splitext(tmp_file_path)[0] + ".pdf"
 
-            # Create a temporary PDF file using ReportLab
-            output_pdf = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
-            pdf_path = output_pdf.name
-            output_pdf.close()
-            logger.debug(f"Temporary PDF file created: {pdf_path}")
+        try:
+            # Initialize COM for the current thread
+            comtypes.CoInitialize()
 
-            c = canvas.Canvas(pdf_path, pagesize=letter)
-            width, height = letter
+            # Use comtypes.client to automate Word and convert DOCX to PDF
+            word = comtypes.client.CreateObject("Word.Application")
+            doc = word.Documents.Open(tmp_file_path)
+            doc.SaveAs(output_pdf_path, FileFormat=17)  # FileFormat=17 for PDF
+            doc.Close()
+            word.Quit()
 
-            # Write DOCX content to the PDF
-            y_position = height - 40
-            for para in doc.paragraphs:
-                c.drawString(40, y_position, para.text)
-                y_position -= 12
-                if y_position <= 40:
-                    c.showPage()
-                    y_position = height - 40
+            logging.info(f"Conversion successful: {output_pdf_path}")
 
-            c.save()
-            logger.debug("PDF created successfully.")
+        except Exception as e:
+            logging.error(f"Word automation failed: {e}")
+            return jsonify({"error": f"Conversion failed: {str(e)}"}), 500
 
-            # Send the converted PDF to the user
-            return send_file(
-                pdf_path,
-                as_attachment=True,
-                download_name=f"{os.path.splitext(file.filename)[0]}.pdf",
-                mimetype="application/pdf"
-            )
+        finally:
+            # Uninitialize COM after the Word automation is done
+            comtypes.CoUninitialize()
+
+        # Send the converted PDF to the user
+        response = send_file(
+            output_pdf_path,
+            as_attachment=True,
+            download_name=f"{os.path.splitext(file.filename)[0]}.pdf",
+            mimetype="application/pdf"
+        )
+
+        # Schedule cleanup of the output PDF and the temporary Word file
+        def cleanup():
+            try:
+                os.remove(output_pdf_path)
+                logging.debug(f"Removed output PDF: {output_pdf_path}")
+            except Exception as e:
+                logging.error(f"Failed to remove output PDF: {e}")
+
+            try:
+                os.remove(tmp_file_path)
+                logging.debug(f"Removed temporary Word file: {tmp_file_path}")
+            except Exception as e:
+                logging.error(f"Failed to remove temporary Word file: {e}")
+
+        response.call_on_close(cleanup)
+
+        return response
+
     except Exception as e:
-        logger.error(f"Error during conversion: {str(e)}")
-        return jsonify({"error": f"Error during file conversion: {str(e)}"}), 500
+        logging.error(f"Unexpected error during conversion: {e}")
+        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+    finally:
+        # Final cleanup in case the response.call_on_close didn't trigger
+        if tmp_file_path and os.path.exists(tmp_file_path):
+            try:
+                os.remove(tmp_file_path)
+                logging.debug(f"Removed temporary Word file during final cleanup: {tmp_file_path}")
+            except Exception as e:
+                logging.error(f"Failed to remove temporary Word file during final cleanup: {e}")
+
+        if output_pdf_path and os.path.exists(output_pdf_path):
+            try:
+                os.remove(output_pdf_path)
+                logging.debug(f"Removed output PDF during final cleanup: {output_pdf_path}")
+            except Exception as e:
+                logging.error(f"Failed to remove output PDF during final cleanup: {e}")
+
+        logging.debug("Temporary files cleaned up")
 
 
 
@@ -151,103 +186,136 @@ def convert_pdf_to_word():
         return jsonify({"error": "Unsupported file format. Please upload a .pdf file."}), 400
 
     try:
-        # Get the original filename without the extension
-        original_filename = os.path.splitext(file.filename)[0]
+        logging.debug("Saving PDF to temporary file...")
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+            tmp_file.write(file.read())
+            tmp_file_path = tmp_file.name
 
-        # Read the PDF content
-        pdf_reader = PdfReader(file)
-        doc = Document()
+        logging.debug("Initializing COM...")
+        comtypes.CoInitialize()
 
-        # Extract text from each page and add it to the Word document
-        for page in pdf_reader.pages:
-            text = page.extract_text()
-            doc.add_paragraph(text)
+        logging.debug("Starting Word application...")
+        word = comtypes.client.CreateObject("Word.Application")
+        word.Visible = False
 
-        # Save the Word document to a buffer
-        word_buffer = io.BytesIO()
-        doc.save(word_buffer)
+        logging.debug("Opening PDF file in Word...")
+        doc = word.Documents.Open(tmp_file_path)
 
-        # Move buffer's cursor to the beginning
+        word_output_path = os.path.splitext(tmp_file_path)[0] + ".docx"
+        logging.debug(f"Saving Word document to {word_output_path}...")
+        doc.SaveAs(word_output_path, FileFormat=16)
+
+        logging.debug("Closing Word document and application...")
+        doc.Close()
+        word.Quit()
+
+        logging.debug("Uninitializing COM...")
+        comtypes.CoUninitialize()
+
+        logging.debug("Sending converted Word file to user...")
+        with open(word_output_path, 'rb') as f:
+            word_buffer = io.BytesIO(f.read())
+
+        os.remove(tmp_file_path)
+        os.remove(word_output_path)
+
         word_buffer.seek(0)
-
-        # Use the original filename for the Word document
-        word_filename = f"{original_filename}.docx"
-
         return send_file(
             word_buffer,
             as_attachment=True,
-            download_name=word_filename,
+            download_name=f"{os.path.splitext(file.filename)[0]}.docx",
             mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
+
+    except Exception as e:
+        logging.error(f"Error during PDF to Word conversion: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+
+# Function AND route to handle Excel to PDF conversion
+@app.route('/excel2pdf', methods=['POST'])
+def convert_excel_to_pdf():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part in the request"}), 400
+
+    file = request.files['file']
+
+    if file.filename == '':
+        return jsonify({"error": "No file selected"}), 400
+
+    if not file.filename.endswith('.xlsx') and not file.filename.endswith('.xls'):
+        return jsonify({"error": "Unsupported file format. Please upload an Excel file."}), 400
+
+    try:
+        # Save the uploaded Excel file to a temporary location
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp_file:
+            tmp_file.write(file.read())
+            excel_path = tmp_file.name
+
+        # Generate a temporary file path for the PDF output
+        pdf_output_path = os.path.splitext(excel_path)[0] + ".pdf"
+
+        # Initialize COM for the current thread
+        comtypes.CoInitialize()
+
+        # Create an instance of Excel application
+        excel = comtypes.client.CreateObject("Excel.Application")
+        excel.Visible = False  # Keep Excel invisible during the process
+
+        # Open the Excel file
+        workbook = excel.Workbooks.Open(excel_path)
+
+        # Optimize the workbook for PDF conversion
+        for sheet in workbook.Sheets:
+            # Define the print area explicitly (optional, adjust as needed)
+            sheet.PageSetup.PrintArea = ""
+
+            # Set fit-to-page options for better layout
+            sheet.PageSetup.Zoom = False
+            sheet.PageSetup.FitToPagesWide = 1
+            sheet.PageSetup.FitToPagesTall = False
+
+            # Set page orientation (optional, based on your preference)
+            sheet.PageSetup.Orientation = 2  # 2 = Landscape, 1 = Portrait
+
+        # Export the workbook to PDF
+        workbook.ExportAsFixedFormat(
+            Type=0,  # PDF type
+            Filename=pdf_output_path,
+            Quality=0,  # Standard quality
+            IncludeDocProperties=True,  # Include document properties
+            IgnorePrintAreas=False,  # Preserve print areas
+            OpenAfterPublish=False  # Do not open the PDF after publishing
+        )
+
+        # Close the workbook and Excel application
+        workbook.Close(SaveChanges=False)
+        excel.Quit()
+
+        # Read the generated PDF into a buffer
+        with open(pdf_output_path, 'rb') as pdf_file:
+            pdf_buffer = io.BytesIO(pdf_file.read())
+
+        # Cleanup temporary files
+        os.remove(excel_path)
+        os.remove(pdf_output_path)
+
+        # Return the PDF as a downloadable file
+        pdf_buffer.seek(0)
+        return send_file(
+            pdf_buffer,
+            as_attachment=True,
+            download_name=f"{os.path.splitext(file.filename)[0]}.pdf",
+            mimetype="application/pdf"
         )
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
-# Function AND route to handle Excel to PDF conversion
-@app.route('/excel2pdf', methods=['POST'])
-def convert_excel_to_pdf_route():
-    # Check if a file is part of the request
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part in the request'}), 400
-    
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
-    
-    if not file.filename.endswith('.xlsx'):
-        return jsonify({'error': 'Only .xlsx files are supported'}), 400
-
-    # Save the uploaded Excel file
-    input_excel_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-    print(f"Saving file to: {input_excel_path}")
-    file.save(input_excel_path)
-
-    # Set the output PDF file path
-    output_pdf_path = os.path.join(app.config['OUTPUT_FOLDER'], os.path.splitext(file.filename)[0] + '.pdf')
-
-    try:
-        # Convert the Excel file to PDF
-        convert_excel_to_pdf(input_excel_path, output_pdf_path)
-
-        # Check if the PDF was created
-        if not os.path.exists(output_pdf_path):
-            return jsonify({'error': 'Conversion failed, PDF file not found'}), 500
-
-    except Exception as e:
-        print(f"Error during conversion: {e}")  # Log the error
-        return jsonify({'error': str(e)}), 500
-
-    # Return the generated PDF file
-    return send_file(output_pdf_path, as_attachment=True, download_name=os.path.basename(output_pdf_path))
-
-def convert_excel_to_pdf(input_excel, output_pdf_path):
-    """Converts an Excel file to a PDF file."""
-    try:
-        df = pd.read_excel(input_excel)
-        print(f"DataFrame: {df.head()}")  # Check DataFrame contents for debugging
-
-        with PdfPages(output_pdf_path) as pdf:
-            plt.figure(figsize=(11.69, 8.27))  # A4 size
-
-            # Plot the dataframe
-            ax = plt.gca()
-            ax.axis('off')
-            table = plt.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
-
-            # Adjust table style
-            table.auto_set_font_size(False)
-            table.set_fontsize(10)
-            table.scale(1.2, 1.2)  # Adjust size
-
-            # Save the plot to PDF
-            pdf.savefig()
-            plt.close()
-
-    except Exception as e:
-        print(f"Error in convert_excel_to_pdf function: {e}")
-        raise
-
+    finally:
+        # Ensure COM is uninitialized after the operation
+        comtypes.CoUninitialize()
 
 
 # Route AND function for image conversions
