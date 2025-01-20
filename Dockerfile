@@ -1,25 +1,21 @@
-# Use an official Python image as the base image
-FROM python:3.9-slim
+# Use a Windows base image
+FROM mcr.microsoft.com/windows/servercore:ltsc2022
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    libreoffice \
-    libreoffice-writer \
-    unoconv \
-    build-essential \
-    && apt-get clean
-
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Copy the application files into the container
-COPY . /app
+# Install Chocolatey and Python
+RUN powershell -Command \
+    iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')) ; \
+    choco install python3 --no-progress ; \
+    python -m pip install --upgrade pip ; \
+    pip install -r requirements.txt
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy the application code
+COPY . .
 
-# Expose the port Flask will run on
+# Expose the application port
 EXPOSE 5000
 
-# Set the default command to run the Flask app
+# Run the application
 CMD ["python", "app.py"]
