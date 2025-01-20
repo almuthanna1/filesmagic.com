@@ -69,9 +69,9 @@ def excel2pdf():
 def imgcnvt():
     return render_template('imgcnvt.html')
 
-@app.route('/comtypes.html')
-def comtypes():
-    return render_template('comtypes.html')
+@app.route('/readmorecom.html')
+def readmorecom():
+    return render_template('readmorecom.html')
 
 
 # Route and function for Word-to-PDF conversion
