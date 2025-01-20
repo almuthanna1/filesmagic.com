@@ -1,21 +1,17 @@
-# Use a Windows base image
-FROM mcr.microsoft.com/windows/servercore:ltsc2022
+# Use a Linux base image
+FROM python:3.10-slim
 
 # Set the working directory
 WORKDIR /app
 
-# Install Chocolatey and Python
-RUN powershell -Command \
-    iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')) ; \
-    choco install python3 --no-progress ; \
-    python -m pip install --upgrade pip ; \
-    pip install -r requirements.txt
-
-# Copy the application code
+# Copy project files
 COPY . .
 
-# Expose the application port
-EXPOSE 5000
+# Install dependencies
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Run the application
+# Expose port 8080
+EXPOSE 8080
+
+# Command to run the app
 CMD ["python", "app.py"]
