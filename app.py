@@ -20,6 +20,8 @@ import comtypes.client
 
 app = Flask(__name__)
 
+app.run(host='0.0.0.0', port=80)
+
 # Upload folder and output folder paths
 UPLOAD_FOLDER = './uploads'
 OUTPUT_FOLDER = './output'
