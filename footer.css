@@ -1,0 +1,10 @@
+footer {
+    text-align: center;
+    padding: 10px 20px;
+    background-color: #333;
+    color: #f2f2f2;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: auto; /* Pushes the footer right at the bottom */
+}
