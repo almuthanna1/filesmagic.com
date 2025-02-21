@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FilesMagic - Download</title>
+    <link rel="stylesheet" href="navigation.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="icon" href="fm-favicon.png" type="image/png">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            scroll-behavior: smooth;
+            align-items: center;
+            color: #fff;
+        }
+        
+        
+        header {
+            margin-top: 40px;
+        }
+        
+        h2 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        
+        
+        #downloads {
+            width: 80%;
+            max-width: 800px;
+            margin: 40px auto;
+            text-align: center;
+        }
+        
+        .download-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .download-card h3 {
+            margin-bottom: 5px;
+        }
+        
+        .download-card a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            background: #ff9800;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        
+        .download-card a:hover {
+            background: #e68900;
+        }
+
+        .download-button {font-weight: bold;}
+        
+    </style>
+
+    <div class="topnav">
+        <a class="active" href="changelog.html">Changelog</a>
+        <a class="active" href="index.html">Home</a>
+        <a class="active" href="download.html">Download</a>
+        <a class="disabled" href="#">‎</a>
+    </div>
+
+</head>
+<body>
+    
+    <br>
+    <br>
+    <header>
+        <h2>Download the latest version below</h2>
+        <p>Be sure to extract the folder first, and then run FilesMagic.exe</p>
+    </header>
+    
+    <section id="downloads">
+        <h2>Active Releases</h2>
+        <div class="download-card">
+            <h3>Version 4.0.1</h3>
+            <p>Bug fixes and improvements</p>
+            <a class="download-button" href="/filesmagic-versions/filesmagic.com/filesmagic-versions/FilesMagicv4.0.1.zip" download="FilesMagicv4.0.1.zip">Download</a>
+        </div>
+        
+        <h2>Past Releases</h2>
+        <div class="download-card">
+            <h3>Version 4.0.0</h3>
+            <p>FilesMagic app launch!</p>
+            <a class="download-button" href="/filesmagic-versions/filesmagic.com/filesmagic-versions/FilesMagicv4.0.0.zip" download="FilesMagicv4.0.0.zip">Download</a>
+        </div>
+    </section>
+    
+    <footer>
+        <small>&copy; FilesMagic 2025. All Rights Reserved.</small>
+    </footer>
+</body>
+</html>
