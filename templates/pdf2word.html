@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FilesMagic - PDF to Word</title>
+    <link rel="stylesheet" href="/static/css/navigation.css">
+    <link rel="stylesheet" href="/static/css/footer.css">
+    <link rel="stylesheet" href="/static/css/general.css">
+    <link rel="stylesheet" href="/static/css/theme.css">
+    <link rel="icon" href="/static/fm-favicon.png" type="image/png">
+
+    <style>
+        .container {
+            margin-top: 10vh;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="nav-links">
+            <li><a href="/download">Download</a></li>
+            <li><a href="/word2pdf">Word to PDF</a></li>
+            <li><a href="/pdf2word">PDF to Word</a></li>
+            <li><a href="/excel2pdf">Excel to PDF</a></li>
+            <li><a href="/mergepdf">Merge PDF</a></li>
+            <li><a href="/imgcnvt">Image Converter</a></li>
+            <li><a href="/feedback">Feedback</a></li>
+        </ul>
+    </nav>
+    
+    <button id="theme-selector">🌙</button>
+
+    <main>
+        <div class="container">
+            <h1>Convert PDF to Word</h1>
+            <form id="convertForm" enctype="multipart/form-data">
+                <label class="file-input">
+                    <input type="file" name="file" id="fileToUpload" accept=".pdf">
+                </label>
+                <br>
+                <br>
+                <button type="button" id="convert-btn" class="convert-btn">Convert to Word</button>
+            </form>
+            <p id="status"></p>
+            <a id="download-link" href="#" style="display:none;" download="converted.pdf">Download Word Document</a>
+        </div>
+    </main>
+
+    <footer>
+        <div class="left-content">
+            <small>&copy; FilesMagic 2025. All Rights Reserved.</small>
+        </div>
+        <p class="version">v5.0.1</p>
+    </footer> 
+
+    <script src="/static/js/pdf2word.js"></script>
+    <script src="/static/js/theme.js"></script>
+    <script src="/static/js/navigation.js"></script>
+</body>
+</html>
