@@ -1,0 +1,72 @@
+nav {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%); /* Keep the horizontal centering */
+    width: fit-content;
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    padding: 1rem 2rem;
+    z-index: 1000;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    backdrop-filter: blur(10px); /* Blurred background effect */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Shadow for contrast */
+    border-radius: 20px;
+    transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+    justify-content: center;
+}
+
+/* Hide navbar upwards when scrolling down */
+.navbar-hidden {
+    transform: translateX(-50%) translateY(-100%); /* Move navbar up */
+    opacity: 0;  /* Make it invisible */
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links li {
+    position: relative;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    animation: float 3s infinite ease-in-out;
+    transition: color 0.3s;
+    font-weight: 600;
+}
+
+/* Glowing effect */
+.nav-links a:hover {
+    color: #00d9ff;
+    text-shadow: 0 0 10px #00d9ff, 0 0 20px #00d9ff;
+}
+
+.nav-links a:hover::before {
+    width: 100%;
+    box-shadow: 0 0 10px #00d9ff;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-3px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Dark Mode */
+.dark nav {
+    background: white;
+    color: black;
+}
+
+.dark .nav-links a {
+    color: black;
+}
