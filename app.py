@@ -8,9 +8,6 @@ import requests
 from PyPDF2 import PdfMerger
 import requests
 
-print("Current Working Directory:", os.getcwd())
-
-
 current_folder = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__, 
@@ -285,6 +282,5 @@ def insert_file_metadata(filename, file_url):
 
 
 # ========== RUN APP ==========
-print("🚀 Flask is running from:", __file__)
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
