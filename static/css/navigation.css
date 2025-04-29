@@ -42,6 +42,7 @@ nav {
     animation: float 3s infinite ease-in-out;
     transition: color 0.3s;
     font-weight: 600;
+    white-space: nowrap;
 }
 
 /* Glowing effect */
