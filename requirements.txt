@@ -4,3 +4,4 @@ Pillow
 Werkzeug
 requests
 PyPDF2
+gunicorn
