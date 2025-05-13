@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta content="Learn why FilesMagic's desktop version only runs on Windows and explore web alternatives." name="description"/><meta content="FilesMagic - Why Windows Only" property="og:title"/><meta content="Learn why FilesMagic's desktop version only runs on Windows and explore web alternatives." property="og:description"/><meta content="website" property="og:type"/><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>COM Technology</title>
+<link href="/static/fm-favicon.png" rel="icon" type="image/png"/>
+<link href="/static/css/navigation.css" rel="stylesheet"/>
+<link href="/static/css/footer.css" rel="stylesheet"/>
+<link href="/static/css/theme.css" rel="stylesheet"/>
+<link href="/static/css/general.css" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding-top: 80px;
+            min-height: 100vh;
+        }
+
+        .download-header {
+            text-align: center;
+            margin: 5rem 0 2rem 0;
+        }
+
+        .download-header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            text-shadow: 0px 2px 10px rgba(0,0,0,0.4);
+            animation: fadeInDown 1s ease;
+            color: var(--text-color);
+        }
+
+        .download-header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modern-card {
+            background-color: var(--bg-color);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 800px;
+            width: 90%;
+            margin: 3rem auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .modern-card {
+                border: 1px solid rgba(255, 255, 255, 0.4);
+                box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modern-card h2 {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .modern-card p {
+            line-height: 1.8;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .modern-card a {
+            color: #ffcc00;
+            text-decoration: underline;
+        }
+    </style>
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "FilesMagic - Why Windows Only",
+      "description": "Learn why FilesMagic's desktop version only runs on Windows and explore web alternatives.",
+      "url": "https://filesmagic.com/readmorecom",
+      "publisher": {
+        "@type": "Organization",
+        "name": "FilesMagic",
+        "url": "https://filesmagic.com"
+      }
+    }
+    </script></head>
+<body>
+<nav>
+<ul class="nav-links">
+<li><a href="/download">Download</a></li>
+<li><a href="/word2pdf">Word to PDF</a></li>
+<li><a href="/pdf2word">PDF to Word</a></li>
+<li><a href="/excel2pdf">Excel to PDF</a></li>
+<li><a href="/mergepdf">Merge PDF</a></li>
+<li><a href="/imgcnvt">Image Converter</a></li>
+<li><a href="/feedback">Feedback</a></li>
+</ul>
+</nav>
+<button id="theme-selector">🌙</button>
+<header class="download-header">
+<h1>Why FilesMagic Desktop Doesn't Work on macOS or Linux</h1>
+<p>Understanding COM Technology Limitations</p>
+</header>
+<section class="modern-card">
+<h2>What Is COM?</h2>
+<p>COM (Component Object Model) is a Microsoft technology that allows software components to communicate with one another. It’s a system-level technology that’s deeply tied to the Windows operating system and is used extensively in automation tasks involving Microsoft Office, Internet Explorer, and other Windows-native applications.</p>
+<h2>Why COM Is Not Supported on macOS or Linux</h2>
+<p>COM is a proprietary Windows-only framework. It relies heavily on Windows-specific system calls, registry entries, and internal object handling mechanisms that simply don’t exist on Unix-based systems like macOS or Linux. This means that any software that uses COM — like the FilesMagic desktop app — cannot run natively on these platforms.</p>
+<h2>Can COM Be Emulated?</h2>
+<p>While tools like Wine attempt to emulate some Windows APIs on Linux, they do not fully or reliably support COM-based automation. Similarly, there is no native COM support in macOS, and using virtual machines to run the Windows version of FilesMagic introduces performance issues and complexity.</p>
+<h2>Alternative Solutions</h2>
+<p><strong>✅ Recommended:</strong> Use the web-based version of FilesMagic directly at <a href="https://filesmagic.com" target="_blank">FilesMagic.com</a>. It works cross-platform on all major browsers and doesn’t require installation.</p>
+<p>Other alternatives include using open-source tools like LibreOffice or Python libraries such as <code>python-docx</code>, <code>pypdf</code>, and <code>unoconv</code> — but they typically require programming knowledge and don't match the ease-of-use of FilesMagic.</p>
+<h2>Conclusion</h2>
+<p>Due to the technical limitations of COM on non-Windows platforms, FilesMagic’s desktop version cannot run on macOS or Linux. However, we’ve made sure to support those users through the fully functional online version — no download required, just visit <a href="https://filesmagic.com" target="_blank">FilesMagic.com</a>.</p>
+</section>
+<footer>
+<div class="left-content">
+<small>© FilesMagic 2025. All Rights Reserved.</small>
+</div>
+<p class="version">v5.0.1</p>
+</footer>
+<script src="/static/js/theme.js"></script>
+<script src="/static/js/navigation.js"></script>
+</body>
+</html>

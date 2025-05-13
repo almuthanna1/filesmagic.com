@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta content="Send your feedback about FilesMagic. We value your thoughts and ideas." name="description"/><meta content="FilesMagic - Feedback" property="og:title"/><meta content="Send your feedback about FilesMagic. We value your thoughts and ideas." property="og:description"/><meta content="website" property="og:type"/><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FilesMagic - Feedback</title>
+<link href="/static/css/navigation.css" rel="stylesheet"/>
+<link href="/static/css/footer.css" rel="stylesheet"/>
+<link href="/static/css/general.css" rel="stylesheet"/>
+<link href="/static/css/theme.css" rel="stylesheet"/>
+<link href="/static/fm-favicon.png" rel="icon" type="image/png"/>
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "FilesMagic - Feedback",
+      "description": "Send your feedback about FilesMagic. We value your thoughts and ideas.",
+      "url": "https://filesmagic.com/feedback",
+      "publisher": {
+        "@type": "Organization",
+        "name": "FilesMagic",
+        "url": "https://filesmagic.com"
+      }
+    }
+    </script></head>
+<body>
+<nav>
+<ul class="nav-links">
+<li><a href="/download">Download</a></li>
+<li><a href="/word2pdf">Word to PDF</a></li>
+<li><a href="/pdf2word">PDF to Word</a></li>
+<li><a href="/excel2pdf">Excel to PDF</a></li>
+<li><a href="/mergepdf">Merge PDF</a></li>
+<li><a href="/imgcnvt">Image Converter</a></li>
+<li><a href="/feedback">Feedback</a></li>
+</ul>
+</nav>
+<button id="theme-selector">🌙</button>
+<style>
+        .submit-button {
+            background-color: #0096FF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+
+        .DIF-TEXT {
+            color:black;
+        }
+
+
+        #feedback {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            font-size: 16px;
+            font-family: 'Arial', sans-serif;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            color: #333;
+            transition: all 0.3s ease;
+            resize: vertical;  /* Allows vertical resizing */
+        }
+
+        #feedback:focus {
+            border: 2px solid #333;  /* Change border color on focus */
+            background-color: #fff;  /* Lighter background on focus */
+            outline: none;  /* Remove outline */
+            box-shadow: 0 0 8px rgba(51, 51, 51, 0.5);  /* Add subtle shadow */
+        }
+
+        #feedback::placeholder {
+            color: #888;  /* Light placeholder text */
+            font-style: italic;
+        }
+
+        .container {
+            margin-top: 10vh;
+        }
+    </style>
+    <br>
+    <br>
+<main><p>Send your feedback about FilesMagic. We value your thoughts and ideas.</p>
+<div class="container">
+<h1>We Value Your Feedback!</h1>
+<form id="feedback-form">
+<!-- Name (optional) -->
+<label for="name">
+<span class="DIF-TEXT">Your Name (Optional):</span>
+</label>
+<input id="name" name="name" placeholder="Enter your name" type="text"/>
+<br/>
+<br/>
+<!-- Email (optional) -->
+<label for="email">
+<span class="DIF-TEXT">Your Email (Optional):</span>
+</label>
+<input id="email" name="email" placeholder="Enter your email" type="email"/>
+<br/>
+<br/>
+<!-- Feedback Textarea -->
+<label for="feedback">
+<span class="DIF-TEXT">Your Feedback:</span>
+</label>
+<br/>
+<br/>
+<textarea id="feedback" name="feedback" placeholder="Enter your feedback here..." required=""></textarea>
+<br/>
+<br/>
+<!-- Submit Button -->
+<button class="submit-button" type="submit">Submit Feedback</button>
+</form>
+<p id="status"></p>
+</div>
+</main>
+<footer>
+<div class="left-content">
+<small>© FilesMagic 2025. All Rights Reserved.</small>
+</div>
+<p class="version">v5.0.1</p>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="/static/js/feedback.js"></script> <!-- after supabase sdk -->
+<script src="/static/js/theme.js"></script>
+<script src="/static/js/navigation.js"></script>
+</body>
+</html>
